@@ -1,0 +1,3 @@
+COG SiTrace is a small utility to enable trace on demand for Siebel CRM.
+
+COG SiTrace is for those who find themselves in the world of Siebel Customer Relationship Management applications. SiTrace is a tiny HTML application that provides the ability to trace object allocation/deallocation, as well as for SQL, dynamically for Siebel. While doing that it gets some basic information of the active session. It needs Siebel executable to be running on the local desktop, and yes, you still need to put trace statements in code to trace script.

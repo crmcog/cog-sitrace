@@ -1,0 +1,530 @@
+<head>
+	<!--
+	--------------------------------------------------------------
+	Full Name: 	COG SiTrace
+	Desc.:		Runs as a HTA on the user machine and helps 
+				manipulate Siebel trace information.
+	Author:		Prashanth K, May-13
+	Version:	0.1
+	
+	Changes:
+	Version		Date		Changes
+	0.1			1-May-13	Initial version
+	--------------------------------------------------------------
+	-->
+	<title>SiTrace</title>
+	<HTA:APPLICATION 
+     APPLICATIONNAME="COG SiTrace"
+     SCROLL="no"
+     SINGLEINSTANCE="yes"
+	 BORDER="thin"
+	 MAXIMIZEBUTTON="no"
+	 ICON="magnify.exe"/>
+
+	<style type="text/css">
+		html, body{ 
+			margin:0; 
+			padding:0; 
+			text-align:center;
+			font-family:"Lucida Grande", "Book Antiqua", "Book Antiqua", Helvetica;	
+			font:95%;
+			height: 100%;
+		} 
+		#wrap {min-height: 100%;}
+		
+		#pagewidth{ 
+			min-height: 90%;
+			height: auto !important;
+			height: 90%;
+			margin: 0 auto -1em;
+			width:100%; 
+			text-align:left; 
+		} 
+				
+		#header{
+			position:relative; 
+			height:60px; 
+			background-color:#FFFFFF; 
+			width:100%;
+			overflow:auto;
+			border:1px #EFEFEF;
+			border-style:none none outset none;
+			padding: 0px 0px 0px 10px;
+		} 
+		
+		.header-text{
+			position:relative; 
+			width:100%;
+			padding: 1em 0em 0em 1em;
+			font:150%;
+			margin-left:50px;
+		} 
+		.help-text{
+			float:right;
+			position:relative; 
+			width:100%;
+			padding:0px 20px 0px 0px;
+			font:80%;
+			text-align:right;
+			display:inline-block;
+			font-family="Helvetica";
+		} 
+		
+		#center-text{
+			text-align:"center";
+		}
+		 
+		#leftcolumn{
+			width:10%; 
+			float:left; 
+			position:relative; 
+		}
+		
+		#twocolumn{
+			width:95%; 
+			float:right; 
+			position:relative; 
+		}
+		 
+		#rightcolumn{
+			width:7%; 
+			float:right; 
+			position:relative; 
+
+		}
+		 
+		#centercolumn{
+			padding:1em 0em 1em;
+			background-color: #FFFFFF;  
+			float: left; 
+			position: relative; 
+			width:93%; 
+			text-align: center;
+		}
+		
+		#footer-status{
+			padding: 0em 0em 0em 1em;
+			height:3em; 
+			font:70%;
+			clear:both;
+			display:block;
+			overflow:none;
+		} 
+
+		.custom-css:after {
+			content: "."; 
+			display: block; 
+			height: 0; 
+			clear: both; 
+			visibility: hidden;
+		}
+		 
+		.custom-css{display: inline-block;}
+		
+		.push {
+			height: 1em;
+			clear:both;
+		}	
+		.footer{
+			text-align: "right";
+			height: 1em;
+			background-color:#DCDFD9; 
+			clear:both;
+			border:1px solid #EFEFEF;
+			border-style:groove none none none;
+			padding-right: .5em;
+			font:70%;
+			float: right;
+		}
+		.footer a{
+			color: #666;
+			text-decoration: none;
+
+		}
+
+		.button, .button-small {
+			-moz-box-shadow:inset 0px 0px 0px 0px #ffffff;
+			-webkit-box-shadow:inset 0px 0px 0px 0px #ffffff;
+			box-shadow:inset 0px 0px 0px 0px #ffffff;
+			background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9) );
+			background:-moz-linear-gradient( center top, #f9f9f9 5%, #e9e9e9 100% );
+			filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e9e9e9');
+			background-color:#f9f9f9;
+			-moz-border-radius: 3px;
+			-webkit-border-radius:3px;
+			border-radius:5px;
+			border:1px solid #dcdcdc;
+			display:inline-block;
+			color:#666666;
+			font-family:"Book Antiqua";
+			font-size:10px;
+			font-weight:bold;
+			padding:4px 15px;
+			width: 10em;
+			text-shadow:0px 0px 0px #ffffff;
+		}.button:hover, .button-small:hover {
+			background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9) );
+			background:-moz-linear-gradient( center top, #e9e9e9 5%, #f9f9f9 100% );
+			filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9', endColorstr='#f9f9f9');
+			background-color:#e9e9e9;
+		}.button:active, .button-small:active {
+			position:relative;
+			top:1px;
+		}
+		
+		.button-small {
+			padding:2px 2px;
+			font-size:10px;
+			width: 2em;
+			height: 2em;
+			text-align: center;
+		}
+
+		.field-set{
+			border: 1px #ddd;
+			border-style: dotted;
+			padding:2px 1em 1em 1em;
+			text-align:left;
+		}
+		
+		legend{
+			padding: 0.5em 0.5em;
+			color:grey;
+			font-size:60%;
+			text-align:right;
+		}
+		
+		label {
+			float:left;
+			font:80%;
+			width:25%;
+			margin-right:0.5em;
+			padding-top:0.2em;
+			text-align:right;
+			font-weight:bold;
+		}
+		
+		input {
+			background: white;
+			border: 1px solid #DDD;
+			border-radius: 5px;
+			box-shadow: 0 0 5px #DDD inset;
+			color: #666;
+			outline: none;
+			font:90%;
+		}
+		
+		.CustomTextBox {
+			
+			width:20em;
+			padding: 1px;
+		}
+		
+		.field-set-2row {
+			padding: 0em 1em 0em 5em;
+		}
+		
+		.tooltip {
+			color: #7C98AE;
+			text-decoration: none
+			}
+		 
+		.tooltip:hover {
+			position: relative;
+			text-decoration: none
+			}
+		 
+		.tooltip span {
+			display: none
+			}
+		 
+		.tooltip:hover span {
+			display: block;
+			position: absolute; 
+			top: 0px; left: 40px;
+			width: 200px;
+				padding: 5px; 
+			margin: 10px; 
+			z-index: 100;
+				background: #f0f2f6; 
+			border: 1px solid #955F1F;
+			opacity: 0.9;
+			text-align: center
+			}
+	</style>
+	
+	<script type="text/javascript">
+		var oSiebel;
+		
+		window.onload = function Resize(){
+			/*var fWidth = (screen.width-600)/2;
+			var fHeight = (screen.height-600)/2;
+			window.moveTo(fWidth,fHeight);*/
+			window.resizeTo(530,575);
+		}
+	</script>
+	
+	
+
+</head>
+
+
+<body>
+	
+	<script type="text/javascript">
+		/*
+		--------------------------------------------------------------
+		function: 	CreateSiebelObject
+		arguments: 	none
+		returns:	none
+		desc.:		Create new Siebel ActiveX object for manipulation.
+		--------------------------------------------------------------
+		*/
+		function SetSiebelObject() {
+			var bSiebelExists = false;
+			try {
+				if (CheckSiebelExe()){
+					if (oSiebel == null) {
+						oSiebel = new ActiveXObject("TWSiebel.SiebelWebApplication.1");
+						UpdateStatus ("Connected to Siebel..");
+						SetBasicInfo();
+					}
+					bSiebelExists = true;
+				}
+				else {
+					oSiebel = null;
+					UpdateStatus("SiTrace needs Siebel dedicated/mobile client (siebel.exe) to be running. Validate whether siebel.exe is running on the computer, and retry.")
+				}
+				return bSiebelExists;
+			}
+			catch(e){
+				throw(e);
+			}
+		}
+		
+		/*
+		--------------------------------------------------------------
+		function: 	ChangeTrace
+		arguments: 	none
+		returns:	none
+		desc.:		Turns on/off the Siebel tracing with params
+					selected on the UI.
+		--------------------------------------------------------------
+		*/
+		function ChangeTrace() {
+			var sTraceOption = "Allocation", sTraceAll = "All";
+			if (SetSiebelObject()) {
+				if (document.getElementById("btnTrace").value == "Trace On" && oSiebel != null) {
+					if (document.getElementsByName("optTrace")[1].checked) {
+						sTraceOption = "SQL";
+						sTraceAll = "";
+					}
+					oSiebel.TraceOn(document.getElementById("txtTraceFile").value, sTraceOption, sTraceAll);
+					UpdateStatus("Started trace.");
+					document.getElementById("btnTrace").value = "Trace Off";
+				}
+				else if (document.getElementById("btnTrace").value == "Trace Off" && oSiebel != null){
+					oSiebel.TraceOff();
+					UpdateStatus("Stopped trace.");
+					document.getElementById("btnTrace").value = "Trace On";	
+				}
+			}
+			
+		}
+		
+		/*
+		--------------------------------------------------------------
+		function: 	UpdateStatus
+		arguments: 	string
+		returns:	none
+		desc.:		Displays the input message on UI.
+		--------------------------------------------------------------
+		*/
+		function UpdateStatus(sMessage) {
+			if (sMessage == "clear") sMessage = "";
+			else var Timer = window.setTimeout("UpdateStatus('clear')", 5000);  // 5000 milliseconds = 5 seconds
+			document.getElementById("txtStatus").innerHTML = sMessage;
+		}
+		
+		/*
+		--------------------------------------------------------------
+		function: 	CheckSiebelExe
+		arguments: 	none
+		returns:	true/false
+		desc.:		Returns true if siebel.exe is active (found 
+					running on the machine). Else, returns false.
+		--------------------------------------------------------------
+		*/
+		function CheckSiebelExe() {
+			var sProcessString = "";
+			var bSiebelRunning;
+			var oWmgtRoot = GetObject("winmgmts:\\\\.\\root\\cimv2")
+			var oWmgtItems= oWmgtRoot.ExecQuery("SELECT * FROM Win32_Process where Name='siebel.exe'")
+			for (var enumItems=new Enumerator(oWmgtItems); !enumItems.atEnd(); enumItems.moveNext()) {
+				sProcessString += enumItems.item().Name;
+			}
+			if (sProcessString.indexOf('siebel.exe') >= 0) bSiebelRunning = true;
+			else bSiebelRunning = false;
+			return bSiebelRunning;
+    	}
+		
+		/*
+		--------------------------------------------------------------
+		function: 	ExitForm
+		arguments: 	none
+		returns:	true/false
+		desc.:		Exit the application.
+		--------------------------------------------------------------
+		*/
+		function ExitForm() {
+			this.close();
+		}
+		
+		/*
+		--------------------------------------------------------------
+		function: 	RunShellCommand
+		arguments: 	file name
+		returns:	true/false
+		desc.:		Execute the given shell command.
+		--------------------------------------------------------------
+		*/
+		function RunShellCommand(sCommand, sParam) {
+			try {
+				var oShell = new ActiveXObject("Shell.Application");
+				oShell.ShellExecute(sCommand, sParam, "", "open", "1");
+			}
+			catch(e) {
+				throw(e);
+			}
+			finally {
+				oShell = "";
+			}
+		}
+		
+		/*
+		--------------------------------------------------------------
+		function: 	RunSiebelCommand
+		arguments: 	string, comma delimited parameters
+		returns:	none
+		desc.:		Runs specified Siebel command with the provided
+					params.
+		--------------------------------------------------------------
+		*/
+		function RunSiebelCommand(sResponseField, sCommand, sParam) {
+			var aParam = sParam.split(",");
+			var sVal = "";
+			for (var iTemp = 1; iTemp <= aParam.length; iTemp++){
+				if (aParam[iTemp-1] != "") aParam[iTemp-1] = "'" + aParam[iTemp-1] + "'";
+			}
+
+			if (SetSiebelObject()) {
+			
+				switch (aParam.length) {
+					case 1:
+						sVal = eval("oSiebel." + sCommand + "(" + aParam [0] + ")");
+						break;
+					case 2:
+						sVal = eval("oSiebel." + sCommand + "(" + aParam [0] + "," +  aParam[1] + ")");
+						break;
+					default:
+						alert ("No. of parameters for the Siebel call are " + aParam.length + ", which is not supported by this program yet.");
+				}
+			} //if 
+			
+			if (sVal == "") sVal = "<blank>";
+			
+			if (sResponseField != "") document.getElementById(sResponseField).value = sVal;
+
+			return sVal;
+		}
+
+		function SetBasicInfo(){
+			document.getElementById("txtLogin").value = RunSiebelCommand("", "LoginName","");
+			document.getElementById("txtActivePosition").value = RunSiebelCommand("", "PositionName","");
+		}
+
+	</script>
+	
+	<div id="pagewidth" >
+		<div id="header" class="header">
+			<div style="float:left">
+			<a href="http://crmcog.com"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFcAAABJCAIAAADHdi3QAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAB2LSURBVHhendt51NZVtQfw/mmt1mpc3VoNq+HeJpvW0srKzKGupVaEmiMaDjhCkOaACAoyKIYCiuIAKEogCY5EqMwyiAoqk6Ao5BiKCDgECqb38/y+z3ve531erHvvd7l+7rN/++yz9z5773N+D/C+tyv8swLinXfeebctMHfs2FH4iKBpWKlpoyc0IpIQTiTp3OnbRk4jyhKFiDAgMoyYZ5OeyFhx+/bt4ZRhxGpRyBwEbobgXSSiAj+xaETe/ls0qmoP/KA+buGEKJwQTWji16ZVKMPyDDjiWXwMCLzP/4oEP4tEmEE4XrUfhvDMK3SGjcirRli4vGpPwJtvvlmSJWhUW2dVCCfrBvUXbe20IoSPg19o/PdlEG7m1KZWKHRkWPbKK688++yzTz755JoKa9eufeqppwwRTz/9tOcTFXDCJxN6XYW/VSD5zDPPYAYR8zaSlKBXrFgR/Rk2vkWEXxAlgdXpBwvlVZQz+6WXXnrjjTcaHeRUPQoGKMBKLiAwVQc0ZscLL7wwderUSy+99Mwzzzz99NPPOuuss88+u2fPnuedd16fPn0uuOACNE7h/6ECYZxevXoR69279/nnn9+vX78BAwYU4Wjz9twKkfSKMMIQ4RkQ8Mozr6oZNTpAU3jhhRfS37dv30yMhRdffPHNN9+8fPny119/Pc7HrypFqihwFeI8IAoN6A0bNvz1r3/df//9v/71r/9XhS996Uuf//znP/WpT/1HhU9/+tOf/exnd9lll9122+0HP/jBj370o3333XfvvffeZ599EPDzn//8gAMOyPPAAw9E/PSnP/1JC4j9dwVMT29/9rOf7bfffmhv99prLxoyPQLe/vKXvzREs8oQCPziF7/wNNGrX1VAxIA99tiDYcRESiZu3bo1Xtej0Oiz8GTYCFk0b968E0888Qtf+MKuu+6KGDhwoC3t0aPHsccee/DBB//6178+/PDDTznlFPG+7rrrxo8f/+c///mWW26ZOHGiJxjeeuutt99+u+fkyZMnTZqEExnDcAARgcB0IBZiwoQJNhNhFuHbbrvN01vPapG6KgKYhLMijqGJl19+Ocu/973vicif/vQngYiz/z4KkXjxxReptl0f+chHbK+KuPvuuy1w/fXXDxs2THrLN0k4cuTI6dOnP/LII6pR7fz973/PM1i/fj09nmj8oIkfOkN4/vnni5inwn7uuecyjHD4eRZ+ZhFGF82Yq1atEq+uXbvayN/97ncPPvigNld8rEUhIQgq92tAe42gcezYsfz/4Ac/6Dlo0CD7IPajRo0S4MGDB0sNWXDVVVfddddd991337Jly9KNWKOUNm/eLJtScVmyUv+/QhHe6cTGtyH+NV5++WX7pzSUybRp09IgwPT6fSGoLVXBuwy95YZNPvLIIz/60Y9+4hOfkFRKwLBDhw6KUH0iVKCaPOSQQ4455phu3brJDjnyxz/+8cYbb7znnnseffRRSor+rF0tWG/MoUGwtGREZIpwiMiEA5iGqe06qwERhsahQtBH7OWdd9756quv4pgLbaJQkJlee7tt2zanjv03X1/88pe/vPvuu3O7c+fOp512mtbQqVMn9AknnHDEEUcIisLTh7761a8S/va3v61TYkpFQVGrIuK4jf6gccXQkCGg+RlO9aaGnF+xvNhPAJ2kQ0Qm/AhgSlKWs3DKlCmvvfYaZj0KkSBapCGqvfZ86623JPb999//m9/85jvf+c53v/tdnfnoo492Yl1xxRWKQnfIU13oQI4Ann/jG9/4zwpf+9rXvvWtbwmHVi9Zfv/73w8fPlw4HONbtmyJ0UG1ch0xoD0/SMpEpkgWOkRB4XuKgsx1UohCVq9HISsVFBWIcIhqME7Kgw46KIeWvbX/TmYNUo785S9/oVRT0Bqc/Icddphlvv/973/zm990djpTHS5f/OIXhUMEdVm7IYMETlouXbp048aNWQgsGhQbIK/CgULnLUSAnYCoc1ucb4TblENNIbv4qAgC9SjkfwVEqyXqp4inqGuwl112mabSsWPH44477qSTTlL/Ou3VV1+t3yxcuHD+/PmLFi2SGk7j7t27n3rqqZKFt45u5aM6kkQ//vGPDV06REdxHnXUURdddJFGpeIc4Fk0iNE4noYxjJORCbOgJtrwNsAp0zMEp4yMtovN3bFQ5RmggepNmzbpjscffzyXXMhmzZrl+iD5zznnHG7fcccdhg888ICCv/baa0eMGOF8Npw7d67WqBcIikJQJupIW/VUHZrLhz70oY997GNKRnYok8cee8xR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" alt="crmcog" height="50" width="50" border="0"/>
+			</a>
+			</div>
+			<div class="header-text">COG SiTrace </div>
+			
+			
+		</div>
+
+		<div id="wrapper" class="custom-css">
+			<div class="help-text" title="COG SiTrace is a small utility to control tracing of Siebel application. Run the application as HTA in your local desktop computer, or enable security settings so that the SiTrace HTML page can create ActiveX controls. Siebel client should be running locally on the desktop computer.">[?]</div>
+			<div id="twocolumn"> 
+				<div id="centercolumn">
+					<fieldset class="field-set">
+						<legend>Trace</legend>
+						
+						<label for="txtTraceFile">Trace File</label>
+						<input type="text" class="CustomTextBox" value="c:\trace.txt" id="txtTraceFile" title="Name of the file that will have the output of the trace. Note that there will be 'custom' output only if you have trace statements within Siebel."/>
+						<input type="button" class="button-small" value=" O " title="Open trace file." onClick="RunShellCommand(document.getElementById('txtTraceFile').value,'')"/>
+						<p> 
+						<label for="optTrace">Trace Option</label>
+						<input type="radio" name="optTrace" value="Allocation" checked title="Turn tracing on using the 'Allocation' mode. This will trace all trace statements and Siebel allocation/deallocations.">Allocation</input>
+						<input type="radio" name="optTrace" value="SQL" title="Trace for SQL statements."/>SQL<BR>
+						<p>
+						<div class="field-set-2row">
+							<input type="button" value="Trace On" name="btnTrace"  class="button" onClick="ChangeTrace()" title="Turn trace on or off. Needs Siebel executable to be running"/> 
+							<input type="button" value="Exit" name="btnExit"  class="button" onClick="ExitForm()" title="Exit the application."/><p> 
+							
+						</div>
+					</fieldset>
+					
+					<fieldset class="field-set">
+						<legend>Profile</legend>
+						<div>
+							<label for="ProfileName">Profile</label>
+							<input type="text" class="CustomTextBox" value="" id="ProfileName" title="Profile attribute name to get/set."/>
+							
+						</div>
+						<div>
+							<label for="ProfileValue">Value</label>
+							<input type="text" class="CustomTextBox" id="ProfileValue" title="Profile attribute value that is retrieved from application, or that will be set within the application."/>
+						</div>
+						<p>
+						<div class="field-set-2row">
+							<input type="button" value="GetProfileAttr" name="btnGetProfileAttr"  class="button" onClick="RunSiebelCommand('ProfileValue', 'GetProfileAttr', document.getElementById('ProfileName').value);" title="Get the profile attribute value for the specified name from Siebel application."/>
+							<input type="button" value="SetProfileAttr" name="btnSetProfileAttr"  class="button" onClick="RunSiebelCommand('ProfileValue', 'SetProfileAttr', document.getElementById('ProfileName').value + ',' + document.getElementById('ProfileValue').value);" title="Set the profile attribute value for the specified name in Siebel application. The resulting value is displayed in 'Value'."/>
+						</div>
+					</fieldset>
+					
+					<fieldset class="field-set">
+						<legend>Info.</legend>
+						<div>
+							<label for="txtLogin">Login</label>
+							<input type="text"  class="CustomTextBox" value="" name="txtLogin" readonly title="Login id used in Siebel, read-only field here."/>
+						</div>
+						<div>
+							<label for="txtActivePosition">Active Position</label>
+							<input type="text"  class="CustomTextBox" value="" name="txtActivePosition" readonly title="Position id of the logged in user in Siebel, read-only field here."/>
+						</div>
+					</fieldset>
+				</div>
+				
+				<div id="rightcolumn"></div>
+			</div> 
+			<div id="leftcolumn"></div>
+		</div>
+		<div id="footer-status">
+				<div type="text" id="txtStatus"/>
+		</div>
+		<div class="push"></div>
+	</div>
+	<div id="footer" class="footer" title="Authored by Prashanth Krishnamurthy, Cognizant Technology Solutions.">
+			<div style="float:right;"><a class="tooltip" href="http://crmcog.com" title="Go to the website of the author.">crmcog</a></div>	
+			<div> 
+				<a style="margin-right:3em" id="License" href="#" title="This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>." onClick="alert(document.getElementById('License').title)">license</a>
+				<a style="margin-right:3em" id="Disclaimer" href="#" title="USE THIS TOOL AT YOUR OWN RISK. The tool uses ActiveX controls, and requires to be run as a HTA, or for you to trust the website offering the tool as a HTML page. Both have security risks, and can cause severe damage to data if the code has been tampered with. Analyze the script, and use it only if you understand all risks. The author does not accept any responsibility for any damages arising out of this tool. Cognizant Technology Solutions does not endorse the use of this tool or provide any support if you get into trouble." onClick="alert(document.getElementById('Disclaimer').title)">disclaimer</a>
+			</div>
+			
+	</div>	
+
+</body>
